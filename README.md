@@ -4,4 +4,4 @@
  Make na pasta ".c" para compilar o programa.
  Adicione os pontos no arquivo "input.txt".
  Roda o programa com Make run.
- Se necesário usar o gerador de testes linkados nesse repositório.
+ Se necesário usar o gerador de testes linkado nesse repositório.
