@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Casos de teste</title>
+  </head>
+  <style>
+    body {
+      width: 95vw;
+      height: 95vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: antiquewhite;
+    }
+
+    body div {
+      height: 40px;
+    }
+
+    body textarea {
+      width: 60%;
+      height: 50%;
+    }
+
+    body input[type="number"] {
+      width: 250px;
+      height: 20px;
+    }
+  </style>
+  <body>
+    <label for="nLimit">CASO DE TESTE GERADO:</label>
+    <input
+      id="nLimit"
+      type="number"
+      min="1"
+      step="1"
+      placeholder="Deixe vazio caso não queira limitar o N"
+    />
+    <div></div>
+    <button onclick="genTest()">GERAR</button>
+    <div></div>
+    <label for="testCase">CASO DE TESTE GERADO:</label>
+    <textarea id="testCase" readonly></textarea>
+  </body>
+  <script>
+    function checkCollinearity(arr1, arr2) {
+      // Verifica se todos os pontos de arr1 são colineares
+      const slope1 = (arr1[1].y - arr1[0].y) / (arr1[1].x - arr1[0].x);
+      const slope2 = (arr1[2].y - arr1[1].y) / (arr1[2].x - arr1[1].x);
+      const collinear1 = slope1 === slope2;
+
+      // Verifica se todos os pontos de arr2 são colineares
+      const slope3 = (arr2[1].y - arr2[0].y) / (arr2[1].x - arr2[0].x);
+      const slope4 = (arr2[2].y - arr2[1].y) / (arr2[2].x - arr2[1].x);
+      const collinear2 = slope3 === slope4;
+
+      // Verifica se as duas retas são colineares
+      const slope5 = (arr2[0].y - arr1[0].y) / (arr2[0].x - arr1[0].x);
+      const slope6 = (arr2[1].y - arr1[1].y) / (arr2[1].x - arr1[1].x);
+      const slope7 = (arr2[2].y - arr1[2].y) / (arr2[2].x - arr1[2].x);
+      const collinear3 = slope5 === slope6 && slope6 === slope7;
+
+      // Retorna true se as duas retas são colineares, false caso contrário
+      return collinear1 && collinear2 && collinear3;
+    }
+
+    function checkAll(points, xa, xb, xi, yi) {
+      const A = {
+        x: xa,
+        y: 0,
+      };
+
+      const B = {
+        x: xb,
+        y: 0,
+      };
+
+      const u = {
+        x: xi,
+        y: yi,
+      };
+
+      for (let i = 0; i < points.length; i++) {
+        const v = {
+          x: points[i].x,
+          y: points[i].y,
+        };
+
+        if (checkCollinearity([A, u, v], [B, u, v])) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    function genTest() {
+      const textAreaSelector = document.querySelector("#testCase");
+      const nLimit = parseInt(document.querySelector("#nLimit").value);
+
+      const n = Math.floor(Math.random() * (nLimit || 100)) + 1;
+      const xa = Math.floor(Math.random() * 10 ** 4);
+      let xb = Math.floor(Math.random() * (10 ** 4 - xa)) + xa;
+      xb = xb == xa ? xa + 1 : xb;
+
+      const points = [];
+      while (points.length < n) {
+        const xi = Math.floor(Math.random() * 10 ** 4) + 1;
+        const yi = Math.floor(Math.random() * 10 ** 4) + 1;
+
+        if (xi != yi && !checkAll(points, xa, xb, xi, yi)) {
+          points.push({
+            x: xi,
+            y: yi,
+          });
+        }
+      }
+
+      const pointsString = points
+        .map(function (point) {
+          return `${point.x} ${point.y}`;
+        })
+        .join("\n");
+
+      textAreaSelector.value = `${n} ${xa} ${xb}\n` + pointsString;
+    }
+  </script>
+</html>
